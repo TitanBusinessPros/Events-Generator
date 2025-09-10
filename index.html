@@ -1,0 +1,418 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Local Events Template Generator — Downloadable HTML</title>
+<style>
+  :root{
+    --bg: #f8fafc;
+    --card: #ffffff;
+    --accent: #2563eb;
+    --accent-2:#f43f5e;
+    --text:#0f172a;
+    --muted:#64748b;
+    --radius:14px;
+    --font: "Segoe UI", system-ui, -apple-system, "Helvetica Neue", Arial;
+  }
+  *{box-sizing:border-box}
+  body{
+    margin:0; font-family:var(--font); background:linear-gradient(180deg,#f1f5f9, var(--bg));
+    color:var(--text); padding:28px; -webkit-font-smoothing:antialiased;
+  }
+  .app{ max-width:1100px; margin:0 auto; display:grid; grid-template-columns: 420px 1fr; gap:20px; align-items:start; }
+  header{ grid-column: 1 / -1; display:flex; gap:12px; align-items:center; margin-bottom:6px;}
+  header h1{ margin:0; font-size:20px; color:var(--accent) }
+  header p{ margin:0; color:var(--muted); font-size:13px }
+  .panel{ background:var(--card); border-radius:var(--radius); padding:16px; box-shadow:0 6px 18px rgba(15,23,42,0.06); border:1px solid rgba(15,23,42,0.04) }
+  .controls .field{ margin-bottom:12px; }
+  label{ display:block; font-weight:600; margin-bottom:6px; font-size:13px; color:var(--text) }
+  input[type="text"], input[type="url"], textarea, select { width:100%; padding:10px 12px; border-radius:10px; border:1px solid #e6eef7; background:#fbfdff }
+  textarea{ min-height:70px; resize:vertical }
+  .small{ font-size:13px; color:var(--muted) }
+  .row{ display:flex; gap:8px }
+  button{ background:linear-gradient(180deg,var(--accent), #1d4ed8); color:white; border:none; padding:10px 12px; border-radius:10px; cursor:pointer; font-weight:700 }
+  .ghost{ background:transparent; border:1px solid #e6eef7; color:var(--text); font-weight:700 }
+  .addBtn{ display:block; width:100%; margin-top:6px }
+  .events-list{ max-height:520px; overflow:auto; margin-top:10px; display:flex; flex-direction:column; gap:10px }
+  .event-item{ border-radius:12px; padding:10px; border:1px dashed #eef3fb; background:linear-gradient(180deg, #fff, #fbfdff); display:grid; gap:6px }
+  .event-item .meta{ display:flex; justify-content:space-between; gap:10px; align-items:center }
+  .preview{ padding:18px; min-height:420px; }
+  .calendar{ --g: 18px; padding:24px; border-radius:12px; background:linear-gradient(180deg, rgba(37,99,235,0.03), rgba(244,63,94,0.02)); border:1px solid rgba(15,23,42,0.04) }
+  .cal-header{ display:flex; align-items:center; gap:12px; margin-bottom:18px }
+  .brand{ display:flex; gap:10px; align-items:center }
+  .brand h2{ margin:0; color:var(--accent); font-size:20px }
+  .brand p{ margin:0; color:var(--muted); font-size:13px }
+  .grid{ display:grid; gap:14px; grid-template-columns: repeat(auto-fill,minmax(220px,1fr)) }
+  .card{ background: white; border-radius:12px; padding:12px; box-shadow: 0 8px 20px rgba(2,6,23,0.06); border:1px solid rgba(2,6,23,0.04) }
+  .card img{ width:100%; height:120px; object-fit:cover; border-radius:10px }
+  .card .title{ font-weight:800; margin-top:10px; font-size:15px; color:var(--accent-2) }
+  .card .desc{ color:var(--muted); font-size:13px; margin-top:6px; min-height:40px }
+  .card .icons{ margin-top:8px; font-size:18px }
+  .export-actions{ display:flex; gap:8px; margin-top:12px; align-items:center }
+  .footerNote{ margin-top:12px; color:var(--muted); font-size:13px; text-align:center }
+  .top-controls{ display:flex; gap:8px; align-items:center; margin-left:auto }
+  .colorPreview{ width:28px; height:28px; border-radius:8px; border:1px solid rgba(0,0,0,0.06) }
+  .art{ width:60px; height:60px; display:flex; align-items:center; justify-content:center; background:linear-gradient(160deg, rgba(37,99,235,0.14), rgba(244,63,94,0.08)); border-radius:12px }
+  .art svg{ width:48px; height:48px }
+  @media(max-width:980px){ .app{ grid-template-columns: 1fr; } .top-controls{ margin-left:0 } }
+</style>
+</head>
+<body>
+  <div class="app">
+    <header>
+      <div style="display:flex;gap:12px;align-items:center">
+        <div class="art" aria-hidden="true">
+          <!-- simple decorative SVG art -->
+          <svg viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+            <rect x="4" y="4" width="56" height="56" rx="12" fill="url(#g)"/>
+            <defs><linearGradient id="g" x1="0" x2="1"><stop offset="0" stop-color="#60a5fa"/><stop offset="1" stop-color="#f472b6"/></linearGradient></defs>
+          </svg>
+        </div>
+        <div>
+          <h1 style="margin:0;color:var(--accent)">Local Events Template Generator</h1>
+          <p style="margin:0;color:var(--muted);font-size:13px">Create, preview and export a complete events calendar HTML file — ready to share.</p>
+        </div>
+      </div>
+
+      <div class="top-controls">
+        <div style="display:flex;align-items:center;gap:10px;">
+          <div class="small">Theme color</div>
+          <input id="themeColor" type="color" value="#2563eb" />
+        </div>
+        <div style="display:flex;align-items:center;gap:10px;">
+          <div class="small">Accent 2</div>
+          <input id="accent2" type="color" value="#f43f5e" />
+        </div>
+        <div style="display:flex;align-items:center;gap:10px;">
+          <div class="small">Font</div>
+          <select id="fontSelect">
+            <option value='"Segoe UI", system-ui, -apple-system, "Helvetica Neue", Arial'>Segoe UI</option>
+            <option value="Georgia, serif">Georgia</option>
+            <option value="Arial, sans-serif">Arial</option>
+            <option value='"Courier New", monospace'>Courier New</option>
+          </select>
+        </div>
+      </div>
+    </header>
+
+    <!-- LEFT: Controls -->
+    <div class="panel controls">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px">
+        <strong>Event Builder</strong>
+        <span class="small">Add as many events as you like</span>
+      </div>
+
+      <div class="field">
+        <label for="ev-title">Title</label>
+        <input id="ev-title" type="text" placeholder="Summer Music Night" />
+      </div>
+
+      <div class="field">
+        <label for="ev-desc">Paragraph / Description</label>
+        <textarea id="ev-desc" placeholder="Short description..."></textarea>
+      </div>
+
+      <div class="field">
+        <label for="ev-img">Image URL (optional)</label>
+        <input id="ev-img" type="url" placeholder="https://example.com/photo.jpg" />
+      </div>
+
+      <div class="field">
+        <label>Icon</label>
+        <div class="row">
+          <label class="small"><input type="radio" name="icon" value="🎶" checked /> 🎶 Music</label>
+          <label class="small"><input type="radio" name="icon" value="🎭" /> 🎭 Arts</label>
+          <label class="small"><input type="radio" name="icon" value="🍔" /> 🍔 Food</label>
+          <label class="small"><input type="radio" name="icon" value="⚽" /> ⚽ Sports</label>
+        </div>
+      </div>
+
+      <div style="display:flex;gap:8px">
+        <button id="addEventBtn" class="addBtn">➕ Add Event</button>
+        <button id="clearAll" class="ghost">Clear</button>
+      </div>
+
+      <div style="margin-top:12px;font-weight:700">Events</div>
+      <div class="events-list" id="eventsList" aria-live="polite" aria-label="List of events"></div>
+
+      <div style="margin-top:10px">
+        <small class="small">Preview theme and then export a standalone HTML file.</small>
+      </div>
+
+      <div style="margin-top:12px">
+        <div class="export-actions">
+          <button id="exportBtn">⬇️ Export HTML</button>
+          <button id="copyBtn" class="ghost">Copy HTML</button>
+          <button id="openBtn" class="ghost">Open in New Tab</button>
+        </div>
+        <div class="small" style="margin-top:8px">Export produces a single, self-contained HTML file with inline styles and images referenced by URL.</div>
+      </div>
+    </div>
+
+    <!-- RIGHT: Preview -->
+    <div class="panel preview">
+      <div class="calendar" id="previewCalendar">
+        <div class="cal-header">
+          <div class="brand">
+            <h2 id="calTitle">Community Events</h2>
+            <p id="calSub">Your weekly roundup of local happenings</p>
+          </div>
+          <div style="margin-left:auto;display:flex;gap:8px;align-items:center">
+            <div class="colorPreview" id="colorPreview" title="Theme color"></div>
+            <div class="small">Live Preview</div>
+          </div>
+        </div>
+
+        <div class="grid" id="previewGrid">
+          <!-- event cards go here -->
+        </div>
+
+        <div class="footerNote">This Events Calendar was made possible by Titan Business Pros LLC & ChatGPT.</div>
+      </div>
+    </div>
+  </div>
+
+<script>
+(() => {
+  // State
+  const events = [];
+
+  // Elements
+  const evTitle = document.getElementById('ev-title');
+  const evDesc = document.getElementById('ev-desc');
+  const evImg = document.getElementById('ev-img');
+  const addEventBtn = document.getElementById('addEventBtn');
+  const eventsList = document.getElementById('eventsList');
+  const previewGrid = document.getElementById('previewGrid');
+  const themeColor = document.getElementById('themeColor');
+  const accent2 = document.getElementById('accent2');
+  const fontSelect = document.getElementById('fontSelect');
+  const colorPreview = document.getElementById('colorPreview');
+  const exportBtn = document.getElementById('exportBtn');
+  const copyBtn = document.getElementById('copyBtn');
+  const openBtn = document.getElementById('openBtn');
+  const clearAll = document.getElementById('clearAll');
+
+  // Utilities
+  function uid(){ return Math.random().toString(36).slice(2,9); }
+
+  function renderEventsList(){
+    eventsList.innerHTML = '';
+    events.forEach((ev, idx) => {
+      const el = document.createElement('div');
+      el.className = 'event-item';
+      el.innerHTML = `
+        <div class="meta"><strong style="font-size:14px">${ev.title || 'Untitled'}</strong>
+          <div style="display:flex;gap:8px">
+            <button class="ghost" data-action="up" data-id="${ev.id}">▲</button>
+            <button class="ghost" data-action="down" data-id="${ev.id}">▼</button>
+            <button class="ghost" data-action="edit" data-id="${ev.id}">Edit</button>
+            <button class="ghost" data-action="del" data-id="${ev.id}">Delete</button>
+          </div>
+        </div>
+        <div style="font-size:13px;color:${getComputedStyle(document.documentElement).getPropertyValue('--muted')}">${ev.desc || ''}</div>
+      `;
+      eventsList.appendChild(el);
+    });
+  }
+
+  function renderPreview(){
+    // apply theme
+    document.documentElement.style.setProperty('--accent', themeColor.value);
+    document.documentElement.style.setProperty('--accent-2', accent2.value);
+    document.documentElement.style.setProperty('--font', fontSelect.value);
+    colorPreview.style.background = themeColor.value;
+
+    previewGrid.innerHTML = '';
+    if(events.length === 0){
+      previewGrid.innerHTML = `<div style="grid-column:1/-1;color:var(--muted);">No events yet — add one on the left.</div>`;
+      return;
+    }
+    events.forEach(ev=>{
+      const card = document.createElement('div');
+      card.className = 'card';
+      card.innerHTML = `
+        ${ev.img ? `<img loading="lazy" src="${escapeHtml(ev.img)}" alt="${escapeHtml(ev.title)}" onerror="this.style.display='none'">` : ''}
+        <div class="icons">${ev.icon}</div>
+        <div class="title">${escapeHtml(ev.title || 'Event Title')}</div>
+        <div class="desc">${escapeHtml(ev.desc || '')}</div>
+      `;
+      previewGrid.appendChild(card);
+    });
+  }
+
+  function escapeHtml(s){ return String(s).replaceAll('&','&amp;').replaceAll('<','&lt;').replaceAll('>','&gt;'); }
+
+  function addEvent(){
+    const title = evTitle.value.trim();
+    const desc = evDesc.value.trim();
+    const img = evImg.value.trim();
+    const icon = document.querySelector('input[name="icon"]:checked')?.value || '🎶';
+    const id = uid();
+    events.unshift({id,title,desc,img,icon});
+    evTitle.value=''; evDesc.value=''; evImg.value='';
+    renderEventsList(); renderPreview();
+  }
+
+  // initial
+  renderPreview();
+
+  addEventBtn.addEventListener('click', (e)=>{
+    e.preventDefault();
+    addEvent();
+  });
+
+  eventsList.addEventListener('click', (e) => {
+    const btn = e.target.closest('button');
+    if(!btn) return;
+    const id = btn.dataset.id;
+    const action = btn.dataset.action;
+    const idx = events.findIndex(x=>x.id===id);
+    if(idx === -1) return;
+    if(action === 'del'){ events.splice(idx,1); renderEventsList(); renderPreview(); }
+    if(action === 'up' && idx>0){ const [a]=events.splice(idx,1); events.splice(idx-1,0,a); renderEventsList(); renderPreview(); }
+    if(action === 'down' && idx<events.length-1){ const [a]=events.splice(idx,1); events.splice(idx+1,0,a); renderEventsList(); renderPreview(); }
+    if(action === 'edit'){
+      const eitem = events[idx];
+      evTitle.value = eitem.title; evDesc.value = eitem.desc; evImg.value = eitem.img;
+      document.querySelectorAll('input[name="icon"]').forEach(i=> i.checked = (i.value === eitem.icon));
+      // remove old then re-add on add
+      events.splice(idx,1);
+      renderEventsList(); renderPreview();
+    }
+  });
+
+  // theme controls
+  [themeColor, accent2, fontSelect].forEach(el=> el.addEventListener('input', ()=> renderPreview()));
+
+  clearAll.addEventListener('click', (e)=>{
+    e.preventDefault();
+    if(confirm('Clear all events?')){ events.length = 0; renderEventsList(); renderPreview(); }
+  });
+
+  // Export: build standalone HTML
+  function buildStandaloneHTML(){
+    // Inline minimal CSS and simple art SVG, uses the selected fonts/colors and event data.
+    const tt = document.querySelector('#calTitle')?.textContent || 'Community Events';
+    const sub = document.querySelector('#calSub')?.textContent || 'Your local roundup';
+
+    // Build cards HTML
+    const cards = events.map(ev => {
+      const img = ev.img ? `<img src="${escapeHtml(ev.img)}" alt="${escapeHtml(ev.title)}" />` : '';
+      return `
+        <div class="card">
+          ${img}
+          <div class="icons">${ev.icon}</div>
+          <div class="title">${escapeHtml(ev.title)}</div>
+          <div class="desc">${escapeHtml(ev.desc)}</div>
+        </div>
+      `;
+    }).join('\n');
+
+    // standalone CSS (kept compact)
+    const css = `
+      :root{
+        --accent:${themeColor.value};
+        --accent-2:${accent2.value};
+        --font:${fontSelect.value};
+        --bg:#f8fafc;
+        --muted:#64748b;
+        --radius:12px;
+      }
+      *{box-sizing:border-box}
+      body{font-family:var(--font);margin:0;background:linear-gradient(180deg,#f1f5f9,var(--bg));color:#0f172a}
+      .wrap{max-width:1000px;margin:28px auto;padding:28px}
+      .header{display:flex;align-items:center;gap:16px;margin-bottom:18px}
+      .brand h1{margin:0;color:var(--accent);font-size:26px}
+      .brand p{margin:0;color:var(--muted)}
+      .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:16px}
+      .card{background:white;border-radius:var(--radius);padding:12px;border:1px solid rgba(2,6,23,0.04);box-shadow:0 8px 20px rgba(2,6,23,0.04)}
+      .card img{width:100%;height:140px;object-fit:cover;border-radius:8px}
+      .card .title{font-weight:800;margin-top:10px;color:var(--accent-2)}
+      .card .desc{color:var(--muted);font-size:14px;margin-top:8px;min-height:44px}
+      .card .icons{font-size:20px}
+      footer{margin-top:18px;color:var(--muted);font-size:13px;text-align:center}
+    `;
+
+    // small SVG decorative header art
+    const art = `<svg width="88" height="88" viewBox="0 0 88 88" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+      <defs><linearGradient id="g1" x1="0" x2="1"><stop offset="0" stop-color="${themeColor.value}"/><stop offset="1" stop-color="${accent2.value}"/></linearGradient></defs>
+      <rect x="2" y="2" width="84" height="84" rx="14" fill="url(#g1)" opacity="0.14"/></svg>`;
+
+    const html = `<!doctype html>
+<html lang="en">
+<head><meta charset="utf-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>${escapeHtml(tt)} — Events</title>
+<style>${css}</style>
+</head>
+<body>
+  <div class="wrap">
+    <div class="header">
+      <div aria-hidden="true">${art}</div>
+      <div class="brand"><h1>${escapeHtml(tt)}</h1><p>${escapeHtml(sub)}</p></div>
+    </div>
+    <main>
+      <section class="grid">
+        ${cards || '<div style="grid-column:1/-1;color:var(--muted)">No events were added.</div>'}
+      </section>
+    </main>
+    <footer>This Events Calendar was made possible by Titan Business Pros LLC & ChatGPT.</footer>
+  </div>
+</body>
+</html>`;
+
+    return html;
+  }
+
+  function downloadHtml(filename='events-calendar.html'){
+    const html = buildStandaloneHTML();
+    const blob = new Blob([html], {type: 'text/html'});
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url; a.download = filename; document.body.appendChild(a);
+    a.click(); a.remove();
+    setTimeout(()=> URL.revokeObjectURL(url), 5000);
+  }
+
+  exportBtn.addEventListener('click', (e) => {
+    e.preventDefault();
+    if(events.length === 0 && !confirm('You have no events — export blank calendar?')) return;
+    downloadHtml();
+  });
+
+  copyBtn.addEventListener('click', async (e) => {
+    e.preventDefault();
+    const html = buildStandaloneHTML();
+    try{
+      await navigator.clipboard.writeText(html);
+      alert('Exported HTML copied to clipboard — paste into a file editor and save as .html');
+    }catch(err){
+      // fallback: open in new window so user can copy
+      const w = window.open();
+      w.document.write('<pre style="white-space:pre-wrap;font-family:monospace">'+escapeHtml(html)+'</pre>');
+    }
+  });
+
+  openBtn.addEventListener('click', (e) => {
+    e.preventDefault();
+    const html = buildStandaloneHTML();
+    const url = URL.createObjectURL(new Blob([html],{type:'text/html'}));
+    window.open(url, '_blank');
+    setTimeout(()=> URL.revokeObjectURL(url), 10000);
+  });
+
+  // initial update when color/font changes
+  themeColor.addEventListener('input', renderPreview);
+  accent2.addEventListener('input', renderPreview);
+  fontSelect.addEventListener('change', renderPreview);
+
+  // small keyboard shortcut: Ctrl+Enter adds event
+  document.addEventListener('keydown', (ev)=>{
+    if((ev.ctrlKey||ev.metaKey) && ev.key === 'Enter'){ addEvent(); }
+  });
+
+})();
+</script>
+</body>
+</html>
