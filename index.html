@@ -1,418 +1,638 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="utf-8" />
-<meta name="viewport" content="width=device-width,initial-scale=1" />
-<title>Local Events Template Generator — Downloadable HTML</title>
-<style>
-  :root{
-    --bg: #f8fafc;
-    --card: #ffffff;
-    --accent: #2563eb;
-    --accent-2:#f43f5e;
-    --text:#0f172a;
-    --muted:#64748b;
-    --radius:14px;
-    --font: "Segoe UI", system-ui, -apple-system, "Helvetica Neue", Arial;
-  }
-  *{box-sizing:border-box}
-  body{
-    margin:0; font-family:var(--font); background:linear-gradient(180deg,#f1f5f9, var(--bg));
-    color:var(--text); padding:28px; -webkit-font-smoothing:antialiased;
-  }
-  .app{ max-width:1100px; margin:0 auto; display:grid; grid-template-columns: 420px 1fr; gap:20px; align-items:start; }
-  header{ grid-column: 1 / -1; display:flex; gap:12px; align-items:center; margin-bottom:6px;}
-  header h1{ margin:0; font-size:20px; color:var(--accent) }
-  header p{ margin:0; color:var(--muted); font-size:13px }
-  .panel{ background:var(--card); border-radius:var(--radius); padding:16px; box-shadow:0 6px 18px rgba(15,23,42,0.06); border:1px solid rgba(15,23,42,0.04) }
-  .controls .field{ margin-bottom:12px; }
-  label{ display:block; font-weight:600; margin-bottom:6px; font-size:13px; color:var(--text) }
-  input[type="text"], input[type="url"], textarea, select { width:100%; padding:10px 12px; border-radius:10px; border:1px solid #e6eef7; background:#fbfdff }
-  textarea{ min-height:70px; resize:vertical }
-  .small{ font-size:13px; color:var(--muted) }
-  .row{ display:flex; gap:8px }
-  button{ background:linear-gradient(180deg,var(--accent), #1d4ed8); color:white; border:none; padding:10px 12px; border-radius:10px; cursor:pointer; font-weight:700 }
-  .ghost{ background:transparent; border:1px solid #e6eef7; color:var(--text); font-weight:700 }
-  .addBtn{ display:block; width:100%; margin-top:6px }
-  .events-list{ max-height:520px; overflow:auto; margin-top:10px; display:flex; flex-direction:column; gap:10px }
-  .event-item{ border-radius:12px; padding:10px; border:1px dashed #eef3fb; background:linear-gradient(180deg, #fff, #fbfdff); display:grid; gap:6px }
-  .event-item .meta{ display:flex; justify-content:space-between; gap:10px; align-items:center }
-  .preview{ padding:18px; min-height:420px; }
-  .calendar{ --g: 18px; padding:24px; border-radius:12px; background:linear-gradient(180deg, rgba(37,99,235,0.03), rgba(244,63,94,0.02)); border:1px solid rgba(15,23,42,0.04) }
-  .cal-header{ display:flex; align-items:center; gap:12px; margin-bottom:18px }
-  .brand{ display:flex; gap:10px; align-items:center }
-  .brand h2{ margin:0; color:var(--accent); font-size:20px }
-  .brand p{ margin:0; color:var(--muted); font-size:13px }
-  .grid{ display:grid; gap:14px; grid-template-columns: repeat(auto-fill,minmax(220px,1fr)) }
-  .card{ background: white; border-radius:12px; padding:12px; box-shadow: 0 8px 20px rgba(2,6,23,0.06); border:1px solid rgba(2,6,23,0.04) }
-  .card img{ width:100%; height:120px; object-fit:cover; border-radius:10px }
-  .card .title{ font-weight:800; margin-top:10px; font-size:15px; color:var(--accent-2) }
-  .card .desc{ color:var(--muted); font-size:13px; margin-top:6px; min-height:40px }
-  .card .icons{ margin-top:8px; font-size:18px }
-  .export-actions{ display:flex; gap:8px; margin-top:12px; align-items:center }
-  .footerNote{ margin-top:12px; color:var(--muted); font-size:13px; text-align:center }
-  .top-controls{ display:flex; gap:8px; align-items:center; margin-left:auto }
-  .colorPreview{ width:28px; height:28px; border-radius:8px; border:1px solid rgba(0,0,0,0.06) }
-  .art{ width:60px; height:60px; display:flex; align-items:center; justify-content:center; background:linear-gradient(160deg, rgba(37,99,235,0.14), rgba(244,63,94,0.08)); border-radius:12px }
-  .art svg{ width:48px; height:48px }
-  @media(max-width:980px){ .app{ grid-template-columns: 1fr; } .top-controls{ margin-left:0 } }
-</style>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Local Events Template Generator</title>
+    <style>
+        :root {
+            --bg: #f8fafc;
+            --card: #ffffff;
+            --accent: #2563eb;
+            --accent-2: #f43f5e;
+            --text: #0f172a;
+            --muted: #64748b;
+            --font: "Segoe UI", system-ui, "Helvetica Neue", Arial;
+        }
+        
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+        
+        body {
+            font-family: var(--font);
+            background: var(--bg);
+            color: var(--text);
+            padding: 20px;
+            line-height: 1.6;
+        }
+        
+        .app {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 20px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        @media (min-width: 992px) {
+            .app {
+                grid-template-columns: 400px 1fr;
+            }
+        }
+        
+        .panel {
+            background: var(--card);
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+        }
+        
+        h3 {
+            margin-bottom: 16px;
+            color: var(--accent);
+        }
+        
+        h4 {
+            margin: 16px 0 10px;
+            color: var(--accent-2);
+        }
+        
+        label {
+            display: block;
+            font-weight: 600;
+            margin-bottom: 6px;
+            font-size: 14px;
+        }
+        
+        input, textarea, select {
+            width: 100%;
+            padding: 10px;
+            border-radius: 8px;
+            border: 1px solid #ddd;
+            margin-bottom: 12px;
+            font-family: var(--font);
+            font-size: 14px;
+        }
+        
+        textarea {
+            min-height: 80px;
+            resize: vertical;
+        }
+        
+        button {
+            padding: 10px 16px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 14px;
+            transition: all 0.2s ease;
+        }
+        
+        button:hover {
+            opacity: 0.9;
+            transform: translateY(-2px);
+        }
+        
+        .btn-main {
+            background: var(--accent);
+            color: white;
+            margin-top: 10px;
+        }
+        
+        .btn-ghost {
+            background: #f1f5f9;
+            color: var(--text);
+            font-size: 12px;
+            padding: 6px 10px;
+        }
+        
+        .btn-export {
+            background: var(--accent-2);
+            color: white;
+            margin-right: 8px;
+            margin-bottom: 8px;
+        }
+        
+        .events-list {
+            margin-top: 16px;
+            max-height: 300px;
+            overflow-y: auto;
+            border: 1px solid #eee;
+            border-radius: 8px;
+            padding: 10px;
+        }
+        
+        .event-item {
+            border: 1px solid #e5e7eb;
+            border-radius: 8px;
+            padding: 12px;
+            margin-bottom: 10px;
+            background: #fafafa;
+        }
+        
+        .event-item strong {
+            display: block;
+            overflow-wrap: anywhere;
+            margin-bottom: 4px;
+        }
+        
+        .event-item small {
+            color: var(--muted);
+            font-size: 13px;
+            display: block;
+            margin-top: 4px;
+            overflow-wrap: anywhere;
+        }
+        
+        .event-actions {
+            margin-top: 8px;
+            display: flex;
+            gap: 8px;
+        }
+        
+        .preview {
+            padding: 20px;
+        }
+        
+        .calendar-title {
+            text-align: center;
+            font-weight: bold;
+            font-size: 24px;
+            margin-bottom: 20px;
+            color: var(--accent);
+        }
+        
+        .card {
+            background: #fff;
+            border-radius: 12px;
+            padding: 16px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
+            margin-bottom: 16px;
+            display: flex;
+            align-items: flex-start;
+            gap: 16px;
+        }
+        
+        .card-emoji {
+            font-size: 32px;
+            flex-shrink: 0;
+            width: 50px;
+            height: 50px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 10px;
+            background: #f1f5f9;
+        }
+        
+        .card-content {
+            flex: 1;
+        }
+        
+        .card .title {
+            font-weight: 700;
+            margin-top: 0;
+            color: var(--accent-2);
+            overflow-wrap: anywhere;
+            font-size: 18px;
+            margin-bottom: 6px;
+        }
+        
+        .card .desc {
+            font-size: 14px;
+            color: var(--muted);
+            overflow-wrap: anywhere;
+            line-height: 1.5;
+        }
+        
+        footer {
+            margin-top: 30px;
+            font-size: 14px;
+            color: var(--muted);
+            text-align: center;
+        }
+        
+        .emoji-grid {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 8px;
+            max-height: 200px;
+            overflow-y: auto;
+            padding: 10px;
+            border: 1px solid #eee;
+            border-radius: 8px;
+            margin-bottom: 12px;
+        }
+        
+        .emoji-option {
+            font-size: 24px;
+            text-align: center;
+            padding: 8px;
+            cursor: pointer;
+            border-radius: 8px;
+            transition: background 0.2s;
+        }
+        
+        .emoji-option:hover, .emoji-option.selected {
+            background: #e0f2fe;
+        }
+        
+        .color-pickers {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+            margin-bottom: 16px;
+        }
+        
+        .color-picker {
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .color-picker input {
+            height: 40px;
+            padding: 4px;
+        }
+        
+        hr {
+            margin: 20px 0;
+            border: none;
+            border-top: 1px solid #eee;
+        }
+        
+        .export-options {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-top: 16px;
+        }
+    </style>
 </head>
 <body>
-  <div class="app">
-    <header>
-      <div style="display:flex;gap:12px;align-items:center">
-        <div class="art" aria-hidden="true">
-          <!-- simple decorative SVG art -->
-          <svg viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-            <rect x="4" y="4" width="56" height="56" rx="12" fill="url(#g)"/>
-            <defs><linearGradient id="g" x1="0" x2="1"><stop offset="0" stop-color="#60a5fa"/><stop offset="1" stop-color="#f472b6"/></linearGradient></defs>
-          </svg>
+    <div class="app">
+        <!-- Controls -->
+        <div class="panel">
+            <h3>Add / Edit Event</h3>
+            <label>Title</label>
+            <input id="ev-title" type="text" placeholder="Event title" />
+            
+            <label>Description</label>
+            <textarea id="ev-desc" placeholder="Event description"></textarea>
+            
+            <label>Select Icon</label>
+            <div class="emoji-grid" id="emoji-grid">
+                <!-- 50 event-related emojis -->
+                <div class="emoji-option" data-emoji="🎵">🎵</div>
+                <div class="emoji-option" data-emoji="🎭">🎭</div>
+                <div class="emoji-option" data-emoji="🍔">🍔</div>
+                <div class="emoji-option" data-emoji="⚽">⚽</div>
+                <div class="emoji-option" data-emoji="🎤">🎤</div>
+                <div class="emoji-option" data-emoji="🎨">🎨</div>
+                <div class="emoji-option" data-emoji="📚">📚</div>
+                <div class="emoji-option" data-emoji="🎆">🎆</div>
+                <div class="emoji-option" data-emoji="🍕">🍕</div>
+                <div class="emoji-option" data-emoji="🍷">🍷</div>
+                <div class="emoji-option" data-emoji="🍻">🍻</div>
+                <div class="emoji-option" data-emoji="🎮">🎮</div>
+                <div class="emoji-option" data-emoji="🎧">🎧</div>
+                <div class="emoji-option" data-emoji="🎹">🎹</div>
+                <div class="emoji-option" data-emoji="🥁">🥁</div>
+                <div class="emoji-option" data-emoji="🎸">🎸</div>
+                <div class="emoji-option" data-emoji="🏀">🏀</div>
+                <div class="emoji-option" data-emoji="🏈">🏈</div>
+                <div class="emoji-option" data-emoji="⚾">⚾</div>
+                <div class="emoji-option" data-emoji="🎾">🎾</div>
+                <div class="emoji-option" data-emoji="🏐">🏐</div>
+                <div class="emoji-option" data-emoji="🏓">🏓</div>
+                <div class="emoji-option" data-emoji="🥎">🥎</div>
+                <div class="emoji-option" data-emoji="🏸">🏸</div>
+                <div class="emoji-option" data-emoji="🏉">🏉</div>
+                <div class="emoji-option" data-emoji="🥊">🥊</div>
+                <div class="emoji-option" data-emoji="🥋">🥋</div>
+                <div class="emoji-option" data-emoji="🏊">🏊</div>
+                <div class="emoji-option" data-emoji="🚴">🚴</div>
+                <div class="emoji-option" data-emoji="🏃">🏃</div>
+                <div class="emoji-option" data-emoji="⛷️">⛷️</div>
+                <div class="emoji-option" data-emoji="🏂">🏂</div>
+                <div class="emoji-option" data-emoji="🚣">🚣</div>
+                <div class="emoji-option" data-emoji="🏌️">🏌️</div>
+                <div class="emoji-option" data-emoji="🧘">🧘</div>
+                <div class="emoji-option" data-emoji="🎯">🎯</div>
+                <div class="emoji-option" data-emoji="🎳">🎳</div>
+                <div class="emoji-option" data-emoji="🎱">🎱</div>
+                <div class="emoji-option" data-emoji="🪂">🪂</div>
+                <div class="emoji-option" data-emoji="🚀">🚀</div>
+                <div class="emoji-option" data-emoji="✈️">✈️</div>
+                <div class="emoji-option" data-emoji="🛶">🛶</div>
+                <div class="emoji-option" data-emoji="🌅">🌅</div>
+                <div class="emoji-option" data-emoji="🌃">🌃</div>
+                <div class="emoji-option" data-emoji="🎉">🎉</div>
+                <div class="emoji-option" data-emoji="🎊">🎊</div>
+                <div class="emoji-option" data-emoji="🤹">🤹</div>
+                <div class="emoji-option" data-emoji="🛍️">🛍️</div>
+                <div class="emoji-option" data-emoji="🎁">🎁</div>
+                <div class="emoji-option" data-emoji="🎟️">🎟️</div>
+            </div>
+            
+            <h4>Customize Colors</h4>
+            <div class="color-pickers">
+                <div class="color-picker">
+                    <label for="text-color">Text Color</label>
+                    <input type="color" id="text-color" value="#f43f5e">
+                </div>
+                <div class="color-picker">
+                    <label for="bg-color">Background Color</label>
+                    <input type="color" id="bg-color" value="#e0f2fe">
+                </div>
+            </div>
+            
+            <button id="addEventBtn" class="btn-main">➕ Add Event</button>
+            
+            <div class="events-list" id="eventsList"></div>
+            
+            <hr>
+            
+            <h4>Export Options</h4>
+            <div class="export-options">
+                <button class="btn-export" id="exportHtml">⬇️ Export HTML</button>
+                <button class="btn-export" id="exportPdf">⬇️ Export PDF</button>
+                <button class="btn-export" id="exportPng">⬇️ Export PNG</button>
+            </div>
         </div>
-        <div>
-          <h1 style="margin:0;color:var(--accent)">Local Events Template Generator</h1>
-          <p style="margin:0;color:var(--muted);font-size:13px">Create, preview and export a complete events calendar HTML file — ready to share.</p>
+
+        <!-- Preview -->
+        <div class="panel preview" id="previewArea">
+            <div class="calendar-title">Local Events Calendar</div>
+            <div id="previewGrid"></div>
+            <footer>This Events Calendar was made possible by Titan Business Pros LLC/ Contact us for all your website and app needs by visiting https://titanbusinesspros.github.io/MooreOklahoma/</footer>
         </div>
-      </div>
-
-      <div class="top-controls">
-        <div style="display:flex;align-items:center;gap:10px;">
-          <div class="small">Theme color</div>
-          <input id="themeColor" type="color" value="#2563eb" />
-        </div>
-        <div style="display:flex;align-items:center;gap:10px;">
-          <div class="small">Accent 2</div>
-          <input id="accent2" type="color" value="#f43f5e" />
-        </div>
-        <div style="display:flex;align-items:center;gap:10px;">
-          <div class="small">Font</div>
-          <select id="fontSelect">
-            <option value='"Segoe UI", system-ui, -apple-system, "Helvetica Neue", Arial'>Segoe UI</option>
-            <option value="Georgia, serif">Georgia</option>
-            <option value="Arial, sans-serif">Arial</option>
-            <option value='"Courier New", monospace'>Courier New</option>
-          </select>
-        </div>
-      </div>
-    </header>
-
-    <!-- LEFT: Controls -->
-    <div class="panel controls">
-      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px">
-        <strong>Event Builder</strong>
-        <span class="small">Add as many events as you like</span>
-      </div>
-
-      <div class="field">
-        <label for="ev-title">Title</label>
-        <input id="ev-title" type="text" placeholder="Summer Music Night" />
-      </div>
-
-      <div class="field">
-        <label for="ev-desc">Paragraph / Description</label>
-        <textarea id="ev-desc" placeholder="Short description..."></textarea>
-      </div>
-
-      <div class="field">
-        <label for="ev-img">Image URL (optional)</label>
-        <input id="ev-img" type="url" placeholder="https://example.com/photo.jpg" />
-      </div>
-
-      <div class="field">
-        <label>Icon</label>
-        <div class="row">
-          <label class="small"><input type="radio" name="icon" value="🎶" checked /> 🎶 Music</label>
-          <label class="small"><input type="radio" name="icon" value="🎭" /> 🎭 Arts</label>
-          <label class="small"><input type="radio" name="icon" value="🍔" /> 🍔 Food</label>
-          <label class="small"><input type="radio" name="icon" value="⚽" /> ⚽ Sports</label>
-        </div>
-      </div>
-
-      <div style="display:flex;gap:8px">
-        <button id="addEventBtn" class="addBtn">➕ Add Event</button>
-        <button id="clearAll" class="ghost">Clear</button>
-      </div>
-
-      <div style="margin-top:12px;font-weight:700">Events</div>
-      <div class="events-list" id="eventsList" aria-live="polite" aria-label="List of events"></div>
-
-      <div style="margin-top:10px">
-        <small class="small">Preview theme and then export a standalone HTML file.</small>
-      </div>
-
-      <div style="margin-top:12px">
-        <div class="export-actions">
-          <button id="exportBtn">⬇️ Export HTML</button>
-          <button id="copyBtn" class="ghost">Copy HTML</button>
-          <button id="openBtn" class="ghost">Open in New Tab</button>
-        </div>
-        <div class="small" style="margin-top:8px">Export produces a single, self-contained HTML file with inline styles and images referenced by URL.</div>
-      </div>
     </div>
 
-    <!-- RIGHT: Preview -->
-    <div class="panel preview">
-      <div class="calendar" id="previewCalendar">
-        <div class="cal-header">
-          <div class="brand">
-            <h2 id="calTitle">Community Events</h2>
-            <p id="calSub">Your weekly roundup of local happenings</p>
-          </div>
-          <div style="margin-left:auto;display:flex;gap:8px;align-items:center">
-            <div class="colorPreview" id="colorPreview" title="Theme color"></div>
-            <div class="small">Live Preview</div>
-          </div>
-        </div>
+    <!-- Dependencies -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 
-        <div class="grid" id="previewGrid">
-          <!-- event cards go here -->
-        </div>
+    <script>
+    (() => {
+        const events = [];
+        let editIndex = null;
+        let selectedEmoji = "🎵";
+        let textColor = "#f43f5e";
+        let bgColor = "#e0f2fe";
 
-        <div class="footerNote">This Events Calendar was made possible by Titan Business Pros LLC & ChatGPT.</div>
-      </div>
-    </div>
-  </div>
+        const evTitle = document.getElementById('ev-title');
+        const evDesc = document.getElementById('ev-desc');
+        const emojiGrid = document.getElementById('emoji-grid');
+        const textColorPicker = document.getElementById('text-color');
+        const bgColorPicker = document.getElementById('bg-color');
+        const addBtn = document.getElementById('addEventBtn');
+        const eventsList = document.getElementById('eventsList');
+        const previewGrid = document.getElementById('previewGrid');
 
-<script>
-(() => {
-  // State
-  const events = [];
+        // Initialize emoji selection
+        function initEmojiSelection() {
+            const emojiOptions = document.querySelectorAll('.emoji-option');
+            emojiOptions[0].classList.add('selected');
+            
+            emojiOptions.forEach(option => {
+                option.addEventListener('click', () => {
+                    emojiOptions.forEach(opt => opt.classList.remove('selected'));
+                    option.classList.add('selected');
+                    selectedEmoji = option.getAttribute('data-emoji');
+                });
+            });
+        }
 
-  // Elements
-  const evTitle = document.getElementById('ev-title');
-  const evDesc = document.getElementById('ev-desc');
-  const evImg = document.getElementById('ev-img');
-  const addEventBtn = document.getElementById('addEventBtn');
-  const eventsList = document.getElementById('eventsList');
-  const previewGrid = document.getElementById('previewGrid');
-  const themeColor = document.getElementById('themeColor');
-  const accent2 = document.getElementById('accent2');
-  const fontSelect = document.getElementById('fontSelect');
-  const colorPreview = document.getElementById('colorPreview');
-  const exportBtn = document.getElementById('exportBtn');
-  const copyBtn = document.getElementById('copyBtn');
-  const openBtn = document.getElementById('openBtn');
-  const clearAll = document.getElementById('clearAll');
+        // Initialize color pickers
+        function initColorPickers() {
+            textColorPicker.addEventListener('change', (e) => {
+                textColor = e.target.value;
+                renderPreview();
+            });
+            
+            bgColorPicker.addEventListener('change', (e) => {
+                bgColor = e.target.value;
+                renderPreview();
+            });
+        }
 
-  // Utilities
-  function uid(){ return Math.random().toString(36).slice(2,9); }
+        function renderEventsList() {
+            eventsList.innerHTML = '';
+            events.forEach((ev, idx) => {
+                const item = document.createElement('div');
+                item.className = 'event-item';
+                item.innerHTML = `
+                    <strong>${ev.title}</strong>
+                    <small>${ev.desc}</small>
+                    <div class="event-actions">
+                        <button class="btn-ghost" data-act="edit" data-idx="${idx}">Edit</button>
+                        <button class="btn-ghost" data-act="del" data-idx="${idx}">Delete</button>
+                    </div>
+                `;
+                eventsList.appendChild(item);
+            });
+        }
 
-  function renderEventsList(){
-    eventsList.innerHTML = '';
-    events.forEach((ev, idx) => {
-      const el = document.createElement('div');
-      el.className = 'event-item';
-      el.innerHTML = `
-        <div class="meta"><strong style="font-size:14px">${ev.title || 'Untitled'}</strong>
-          <div style="display:flex;gap:8px">
-            <button class="ghost" data-action="up" data-id="${ev.id}">▲</button>
-            <button class="ghost" data-action="down" data-id="${ev.id}">▼</button>
-            <button class="ghost" data-action="edit" data-id="${ev.id}">Edit</button>
-            <button class="ghost" data-action="del" data-id="${ev.id}">Delete</button>
-          </div>
-        </div>
-        <div style="font-size:13px;color:${getComputedStyle(document.documentElement).getPropertyValue('--muted')}">${ev.desc || ''}</div>
-      `;
-      eventsList.appendChild(el);
-    });
-  }
+        function renderPreview() {
+            previewGrid.innerHTML = '';
+            events.forEach(ev => {
+                const card = document.createElement('div');
+                card.className = 'card';
+                card.innerHTML = `
+                    <div class="card-emoji" style="background-color: ${bgColor}">${ev.icon}</div>
+                    <div class="card-content">
+                        <div class="title" style="color: ${textColor}">${ev.title}</div>
+                        <div class="desc">${ev.desc}</div>
+                    </div>
+                `;
+                previewGrid.appendChild(card);
+            });
+        }
 
-  function renderPreview(){
-    // apply theme
-    document.documentElement.style.setProperty('--accent', themeColor.value);
-    document.documentElement.style.setProperty('--accent-2', accent2.value);
-    document.documentElement.style.setProperty('--font', fontSelect.value);
-    colorPreview.style.background = themeColor.value;
+        addBtn.addEventListener('click', (e) => {
+            e.preventDefault();
+            const newEvent = {
+                title: evTitle.value.trim(), 
+                desc: evDesc.value.trim(), 
+                icon: selectedEmoji
+            };
+            
+            if (!newEvent.title) return;
+            
+            if (editIndex !== null) {
+                events[editIndex] = newEvent;
+                editIndex = null;
+                addBtn.textContent = '➕ Add Event';
+            } else {
+                events.push(newEvent);
+            }
+            
+            evTitle.value = evDesc.value = '';
+            renderEventsList();
+            renderPreview();
+        });
 
-    previewGrid.innerHTML = '';
-    if(events.length === 0){
-      previewGrid.innerHTML = `<div style="grid-column:1/-1;color:var(--muted);">No events yet — add one on the left.</div>`;
-      return;
-    }
-    events.forEach(ev=>{
-      const card = document.createElement('div');
-      card.className = 'card';
-      card.innerHTML = `
-        ${ev.img ? `<img loading="lazy" src="${escapeHtml(ev.img)}" alt="${escapeHtml(ev.title)}" onerror="this.style.display='none'">` : ''}
-        <div class="icons">${ev.icon}</div>
-        <div class="title">${escapeHtml(ev.title || 'Event Title')}</div>
-        <div class="desc">${escapeHtml(ev.desc || '')}</div>
-      `;
-      previewGrid.appendChild(card);
-    });
-  }
+        eventsList.addEventListener('click', (e) => {
+            const btn = e.target.closest('button');
+            if (!btn) return;
+            
+            const idx = parseInt(btn.dataset.idx);
+            if (btn.dataset.act === 'del') {
+                events.splice(idx, 1);
+            } else if (btn.dataset.act === 'edit') {
+                const ev = events[idx];
+                evTitle.value = ev.title;
+                evDesc.value = ev.desc;
+                
+                // Select the appropriate emoji
+                document.querySelectorAll('.emoji-option').forEach(option => {
+                    if (option.getAttribute('data-emoji') === ev.icon) {
+                        option.classList.add('selected');
+                    } else {
+                        option.classList.remove('selected');
+                    }
+                });
+                
+                selectedEmoji = ev.icon;
+                editIndex = idx;
+                addBtn.textContent = '✔️ Update Event';
+            }
+            
+            renderEventsList();
+            renderPreview();
+        });
 
-  function escapeHtml(s){ return String(s).replaceAll('&','&amp;').replaceAll('<','&lt;').replaceAll('>','&gt;'); }
+        // Export HTML
+        document.getElementById('exportHtml').addEventListener('click', () => {
+            const style = `
+                <style>
+                    body {
+                        font-family: "Segoe UI", system-ui, "Helvetica Neue", Arial;
+                        background: #f8fafc;
+                        color: #0f172a;
+                        padding: 20px;
+                        line-height: 1.6;
+                    }
+                    .calendar-title {
+                        text-align: center;
+                        font-weight: bold;
+                        font-size: 24px;
+                        margin-bottom: 20px;
+                        color: #2563eb;
+                    }
+                    .card {
+                        background: #fff;
+                        border-radius: 12px;
+                        padding: 16px;
+                        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
+                        margin-bottom: 16px;
+                        display: flex;
+                        align-items: flex-start;
+                        gap: 16px;
+                    }
+                    .card-emoji {
+                        font-size: 32px;
+                        flex-shrink: 0;
+                        width: 50px;
+                        height: 50px;
+                        display: flex;
+                        align-items: center;
+                        justify-content: center;
+                        border-radius: 10px;
+                        background: ${bgColor};
+                    }
+                    .card-content {
+                        flex: 1;
+                    }
+                    .card .title {
+                        font-weight: 700;
+                        margin-top: 0;
+                        color: ${textColor};
+                        overflow-wrap: anywhere;
+                        font-size: 18px;
+                        margin-bottom: 6px;
+                    }
+                    .card .desc {
+                        font-size: 14px;
+                        color: #64748b;
+                        overflow-wrap: anywhere;
+                        line-height: 1.5;
+                    }
+                    footer {
+                        margin-top: 30px;
+                        font-size: 14px;
+                        color: #64748b;
+                        text-align: center;
+                    }
+                </style>
+            `;
+            
+            let cardsHTML = '';
+            events.forEach(ev => {
+                cardsHTML += `
+                    <div class="card">
+                        <div class="card-emoji">${ev.icon}</div>
+                        <div class="card-content">
+                            <div class="title">${ev.title}</div>
+                            <div class="desc">${ev.desc}</div>
+                        </div>
+                    </div>
+                `;
+            });
+            
+            const html = `<!doctype html>
+                <html>
+                <head>
+                    <meta charset="utf-8">
+                    <title>Local Events Calendar</title>
+                    ${style}
+                </head>
+                <body>
+                    <div class="calendar-title">Local Events Calendar</div>
+                    ${cardsHTML}
+                    <footer>This Events Calendar was made possible by Titan Business Pros LLC/ Contact us for all your website and app needs!/405-998-7979</footer>
+                </body>
+                </html>`;
+                
+            const blob = new Blob([html], {type: "text/html"});
+            const link = document.createElement('a');
+            link.href = URL.createObjectURL(blob);
+            link.download = "events.html";
+            link.click();
+        });
 
-  function addEvent(){
-    const title = evTitle.value.trim();
-    const desc = evDesc.value.trim();
-    const img = evImg.value.trim();
-    const icon = document.querySelector('input[name="icon"]:checked')?.value || '🎶';
-    const id = uid();
-    events.unshift({id,title,desc,img,icon});
-    evTitle.value=''; evDesc.value=''; evImg.value='';
-    renderEventsList(); renderPreview();
-  }
+        // Export PDF
+        document.getElementById('exportPdf').addEventListener('click', async () => {
+            const { jsPDF } = window.jspdf;
+            const pdf = new jsPDF("p", "pt", "a4");
+            const canvas = await html2canvas(document.getElementById('previewArea'));
+            const imgData = canvas.toDataURL("image/png");
+            const imgProps = pdf.getImageProperties(imgData);
+            const pdfWidth = pdf.internal.pageSize.getWidth();
+            const pdfHeight = (imgProps.height * pdfWidth) / imgProps.width;
+            pdf.addImage(imgData, "PNG", 0, 0, pdfWidth, pdfHeight);
+            pdf.save("events.pdf");
+        });
 
-  // initial
-  renderPreview();
+        // Export PNG
+        document.getElementById('exportPng').addEventListener('click', async () => {
+            const canvas = await html2canvas(document.getElementById('previewArea'));
+            const link = document.createElement('a');
+            link.href = canvas.toDataURL("image/png");
+            link.download = "events.png";
+            link.click();
+        });
 
-  addEventBtn.addEventListener('click', (e)=>{
-    e.preventDefault();
-    addEvent();
-  });
-
-  eventsList.addEventListener('click', (e) => {
-    const btn = e.target.closest('button');
-    if(!btn) return;
-    const id = btn.dataset.id;
-    const action = btn.dataset.action;
-    const idx = events.findIndex(x=>x.id===id);
-    if(idx === -1) return;
-    if(action === 'del'){ events.splice(idx,1); renderEventsList(); renderPreview(); }
-    if(action === 'up' && idx>0){ const [a]=events.splice(idx,1); events.splice(idx-1,0,a); renderEventsList(); renderPreview(); }
-    if(action === 'down' && idx<events.length-1){ const [a]=events.splice(idx,1); events.splice(idx+1,0,a); renderEventsList(); renderPreview(); }
-    if(action === 'edit'){
-      const eitem = events[idx];
-      evTitle.value = eitem.title; evDesc.value = eitem.desc; evImg.value = eitem.img;
-      document.querySelectorAll('input[name="icon"]').forEach(i=> i.checked = (i.value === eitem.icon));
-      // remove old then re-add on add
-      events.splice(idx,1);
-      renderEventsList(); renderPreview();
-    }
-  });
-
-  // theme controls
-  [themeColor, accent2, fontSelect].forEach(el=> el.addEventListener('input', ()=> renderPreview()));
-
-  clearAll.addEventListener('click', (e)=>{
-    e.preventDefault();
-    if(confirm('Clear all events?')){ events.length = 0; renderEventsList(); renderPreview(); }
-  });
-
-  // Export: build standalone HTML
-  function buildStandaloneHTML(){
-    // Inline minimal CSS and simple art SVG, uses the selected fonts/colors and event data.
-    const tt = document.querySelector('#calTitle')?.textContent || 'Community Events';
-    const sub = document.querySelector('#calSub')?.textContent || 'Your local roundup';
-
-    // Build cards HTML
-    const cards = events.map(ev => {
-      const img = ev.img ? `<img src="${escapeHtml(ev.img)}" alt="${escapeHtml(ev.title)}" />` : '';
-      return `
-        <div class="card">
-          ${img}
-          <div class="icons">${ev.icon}</div>
-          <div class="title">${escapeHtml(ev.title)}</div>
-          <div class="desc">${escapeHtml(ev.desc)}</div>
-        </div>
-      `;
-    }).join('\n');
-
-    // standalone CSS (kept compact)
-    const css = `
-      :root{
-        --accent:${themeColor.value};
-        --accent-2:${accent2.value};
-        --font:${fontSelect.value};
-        --bg:#f8fafc;
-        --muted:#64748b;
-        --radius:12px;
-      }
-      *{box-sizing:border-box}
-      body{font-family:var(--font);margin:0;background:linear-gradient(180deg,#f1f5f9,var(--bg));color:#0f172a}
-      .wrap{max-width:1000px;margin:28px auto;padding:28px}
-      .header{display:flex;align-items:center;gap:16px;margin-bottom:18px}
-      .brand h1{margin:0;color:var(--accent);font-size:26px}
-      .brand p{margin:0;color:var(--muted)}
-      .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:16px}
-      .card{background:white;border-radius:var(--radius);padding:12px;border:1px solid rgba(2,6,23,0.04);box-shadow:0 8px 20px rgba(2,6,23,0.04)}
-      .card img{width:100%;height:140px;object-fit:cover;border-radius:8px}
-      .card .title{font-weight:800;margin-top:10px;color:var(--accent-2)}
-      .card .desc{color:var(--muted);font-size:14px;margin-top:8px;min-height:44px}
-      .card .icons{font-size:20px}
-      footer{margin-top:18px;color:var(--muted);font-size:13px;text-align:center}
-    `;
-
-    // small SVG decorative header art
-    const art = `<svg width="88" height="88" viewBox="0 0 88 88" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-      <defs><linearGradient id="g1" x1="0" x2="1"><stop offset="0" stop-color="${themeColor.value}"/><stop offset="1" stop-color="${accent2.value}"/></linearGradient></defs>
-      <rect x="2" y="2" width="84" height="84" rx="14" fill="url(#g1)" opacity="0.14"/></svg>`;
-
-    const html = `<!doctype html>
-<html lang="en">
-<head><meta charset="utf-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/>
-<title>${escapeHtml(tt)} — Events</title>
-<style>${css}</style>
-</head>
-<body>
-  <div class="wrap">
-    <div class="header">
-      <div aria-hidden="true">${art}</div>
-      <div class="brand"><h1>${escapeHtml(tt)}</h1><p>${escapeHtml(sub)}</p></div>
-    </div>
-    <main>
-      <section class="grid">
-        ${cards || '<div style="grid-column:1/-1;color:var(--muted)">No events were added.</div>'}
-      </section>
-    </main>
-    <footer>This Events Calendar was made possible by Titan Business Pros LLC & ChatGPT.</footer>
-  </div>
-</body>
-</html>`;
-
-    return html;
-  }
-
-  function downloadHtml(filename='events-calendar.html'){
-    const html = buildStandaloneHTML();
-    const blob = new Blob([html], {type: 'text/html'});
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url; a.download = filename; document.body.appendChild(a);
-    a.click(); a.remove();
-    setTimeout(()=> URL.revokeObjectURL(url), 5000);
-  }
-
-  exportBtn.addEventListener('click', (e) => {
-    e.preventDefault();
-    if(events.length === 0 && !confirm('You have no events — export blank calendar?')) return;
-    downloadHtml();
-  });
-
-  copyBtn.addEventListener('click', async (e) => {
-    e.preventDefault();
-    const html = buildStandaloneHTML();
-    try{
-      await navigator.clipboard.writeText(html);
-      alert('Exported HTML copied to clipboard — paste into a file editor and save as .html');
-    }catch(err){
-      // fallback: open in new window so user can copy
-      const w = window.open();
-      w.document.write('<pre style="white-space:pre-wrap;font-family:monospace">'+escapeHtml(html)+'</pre>');
-    }
-  });
-
-  openBtn.addEventListener('click', (e) => {
-    e.preventDefault();
-    const html = buildStandaloneHTML();
-    const url = URL.createObjectURL(new Blob([html],{type:'text/html'}));
-    window.open(url, '_blank');
-    setTimeout(()=> URL.revokeObjectURL(url), 10000);
-  });
-
-  // initial update when color/font changes
-  themeColor.addEventListener('input', renderPreview);
-  accent2.addEventListener('input', renderPreview);
-  fontSelect.addEventListener('change', renderPreview);
-
-  // small keyboard shortcut: Ctrl+Enter adds event
-  document.addEventListener('keydown', (ev)=>{
-    if((ev.ctrlKey||ev.metaKey) && ev.key === 'Enter'){ addEvent(); }
-  });
-
-})();
-</script>
+        // Initialize the app
+        initEmojiSelection();
+        initColorPickers();
+        renderEventsList();
+        renderPreview();
+    })();
+    </script>
 </body>
 </html>
